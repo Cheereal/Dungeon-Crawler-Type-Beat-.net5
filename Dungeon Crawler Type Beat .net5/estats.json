@@ -1,0 +1,164 @@
+{
+  "bigrat": {
+    "name": "Big Rat",
+    "health": 17,
+    "damagerange": [
+      10,
+      22
+    ],
+    "hit": 9
+  },
+  "biiigrat": {
+    "name": "Biiig Rat",
+    "health": 60,
+    "damagerange": [
+      16,
+      30
+    ],
+    "hit": 7
+  },
+  "fenrir": {
+    "name": "Fenrir",
+    "health": 150,
+    "damagerange": [
+      47,
+      61
+    ],
+    "hit": 7
+  },
+  "anomaly": {
+    "name": "Anomaly",
+    "health": 200,
+    "damagerange": [
+      53,
+      72
+    ],
+    "hit": 7
+  },
+  "giantenemyspider": {
+    "name": "Giant Enemy Spider",
+    "health": 25,
+    "damagerange": [
+      14,
+      22
+    ],
+    "hit": 7
+  },
+  "hati": {
+    "name": "Hati",
+    "health": 100,
+    "damagerange": [
+      40,
+      52
+    ],
+    "hit": 6
+  },
+  "imp": {
+    "name": "Imp",
+    "health": 40,
+    "damagerange": [
+      24,
+      29
+    ],
+    "hit": 7
+  },
+  "koboldchief": {
+    "name": "Kobold Chief",
+    "health": 65,
+    "damagerange": [
+      20,
+      32
+    ],
+    "hit": 7
+  },
+  "koboldguard": {
+    "name": "Kobold Guard",
+    "health": 24,
+    "damagerange": [
+      18,
+      25
+    ],
+    "hit": 7
+  },
+  "koboldsoldier": {
+    "name": "Kobold Soldier",
+    "health": 20,
+    "damagerange": [
+      12,
+      20
+    ],
+    "hit": 8
+  },
+  "largerat": {
+    "name": "Large Rat",
+    "health": 26,
+    "damagerange": [
+      16,
+      22
+    ],
+    "hit": 8
+  },
+  "lesserdemon": {
+    "name": "Lesser Demon",
+    "health": 75,
+    "damagerange": [
+      30,
+      41
+    ],
+    "hit": 7
+  },
+  "lesserimp": {
+    "name": "Lesser Imp",
+    "health": 25,
+    "damagerange": [
+      15,
+      18
+    ],
+    "hit": 7
+  },
+  "lostsoul": {
+    "name": "Lost Soul",
+    "health": 30,
+    "damagerange": [
+      17,
+      22
+    ],
+    "hit": 7
+  },
+  "muffet": {
+    "name": "Muffet",
+    "health": 65,
+    "damagerange": [
+      25,
+      37
+    ],
+    "hit": 7
+  },
+  "muffetspet": {
+    "name": "Muffets Pet",
+    "health": 34,
+    "damagerange": [
+      20,
+      35
+    ],
+    "hit": 7
+  },
+  "skoll": {
+    "name": "Skoll",
+    "health": 110,
+    "damagerange": [
+      45,
+      54
+    ],
+    "hit": 6
+  },
+  "smallenemyspider": {
+    "name": "Small Enemy Spider",
+    "health": 10,
+    "damagerange": [
+      16,
+      20
+    ],
+    "hit": 8
+  }
+}
