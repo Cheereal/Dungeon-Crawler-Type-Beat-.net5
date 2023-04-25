@@ -6,10 +6,8 @@ Imports System.Text.Json.Serialization
 Imports Newtonsoft.Json
 
 'To Do:
-'item, enemy and weapon descriptions (json or txt file) -Done (finally)
-'rest of story -Doing along with other stuff
 'weapon balancing (100% gonna need to do this lmao)
-'maybe buff floor 3-4 enemies??
+'maybe change how loot is generated (kinda long rn like 200 lines)
 Module Program
     Dim Playing As Boolean = True
     Dim floor As Integer = 1
