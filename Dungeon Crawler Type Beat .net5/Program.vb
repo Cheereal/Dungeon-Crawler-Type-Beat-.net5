@@ -9,7 +9,7 @@ Imports Newtonsoft.Json
 'item, enemy and weapon descriptions (json or txt file) -Done (finally)
 'rest of story -Doing along with other stuff
 'weapon balancing (100% gonna need to do this lmao)
-'add enemies - Done
+'maybe buff floor 3-4 enemies??
 Module Program
     Dim Playing As Boolean = True
     Dim floor As Integer = 1
@@ -301,7 +301,7 @@ Module Program
         If phealth > maxphealth Then
             phealth = maxphealth
         End If
-        delayprint($"You used a magic spell and healed for {pheal}HP! You are now on {phealth}HP!", 30, 500)
+        delayprint($"You used a magic spell and healed for {pheal}HP! You are now on {phealth}HP! And are now on {pmana} mana!", 30, 500)
     End Sub
 
     Function useitem(item As String, itemstat As Integer, itemtype As String)
@@ -809,13 +809,12 @@ Module Program
         Console.Clear()
         Scenario(1, 0, "Floor 1")
         Scenario(2, 0, "Big rat")
-        battle("BigRat")
+        battle("bigrat")
         Scenario(3, 15, "")
         Console.Clear()
         Scenario(2, 0, "Large Rat")
         battle("LargeRat")
         Scenario(3, 25, "")
-        Scenario(8, 10, "")
         Scenario(5, 0, "")
         Loot(floor, 0, 0)
         Console.Clear()

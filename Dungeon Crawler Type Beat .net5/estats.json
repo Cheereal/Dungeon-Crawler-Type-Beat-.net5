@@ -37,10 +37,10 @@
   },
   "giantenemyspider": {
     "name": "Giant Enemy Spider",
-    "health": 25,
+    "health": 37,
     "damagerange": [
-      14,
-      22
+      22,
+      31
     ],
     "hit": 7
   },
@@ -55,7 +55,7 @@
   },
   "imp": {
     "name": "Imp",
-    "health": 40,
+    "health": 51,
     "damagerange": [
       24,
       29
@@ -109,25 +109,25 @@
   },
   "lesserimp": {
     "name": "Lesser Imp",
-    "health": 25,
+    "health": 37,
     "damagerange": [
-      15,
-      18
+      25,
+      33
     ],
     "hit": 7
   },
   "lostsoul": {
     "name": "Lost Soul",
-    "health": 30,
+    "health": 50,
     "damagerange": [
       17,
       22
     ],
-    "hit": 7
+    "hit": 6
   },
   "muffet": {
     "name": "Muffet",
-    "health": 65,
+    "health": 80,
     "damagerange": [
       25,
       37
@@ -154,7 +154,7 @@
   },
   "smallenemyspider": {
     "name": "Small Enemy Spider",
-    "health": 10,
+    "health": 27,
     "damagerange": [
       16,
       20
