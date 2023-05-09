@@ -9,9 +9,12 @@ Imports Newtonsoft.Json
 'weapon balancing (100% gonna need to do this lmao)
 'maybe change how loot is generated (kinda long rn like 200 lines)
 'tenth floor lol
+
 Module Program
+    Dim invprintspeed As Decimal = 10
     Dim Playing As Boolean = True
     Dim floor As Integer = 1
+    Dim section As Integer = 1
     Dim go1 As Boolean = False
     Dim go2 As Boolean = False
     Dim pname As String
@@ -19,12 +22,9 @@ Module Program
     Dim maxphealth As Integer = 100
     Dim maxpmana As Integer = 20
     Dim pmana As Integer = 20
-    Dim dambonus As Integer = 0
-    Dim defbonus As Integer = 0
     Dim pattackbonus As Integer = 0
     Dim pdefencebonus As Integer = 0
     Dim phealthbonus As Integer = 0
-    Dim pmanabonus As Integer = 0
     Dim inv As New List(Of String)({})
     Dim iteminv As New List(Of String)({"small health potion", "small health potion"})
     Dim maginv As New List(Of String)({})
@@ -284,7 +284,7 @@ Module Program
     Sub Fight(ename As String, weaponmax As Integer, weaponmin As Integer, weaponhit As Integer, enemyhp As Integer, enemymin As Integer, enemymax As Integer)
         Dim r As Random = New Random()
         If r.Next(1, 20) >= weaponhit Then
-            Dim dmg As Integer = r.Next(weaponmin, weaponmax + 1) + dambonus
+            Dim dmg As Integer = r.Next(weaponmin, weaponmax + 1) + pattackbonus
             ehp -= dmg
             delayprint($"You hit {pre} {ename} for {dmg}HP!", 30, 250)
         Else
@@ -322,12 +322,12 @@ Module Program
             Case Is = "damage"
                 delayprint($"You used a {item} and now have a +{itemstat} damage bonus!", 30, 500)
                 iteminv.Remove(item)
-                dambonus = itemstat
+                pattackbonus = itemstat
                 Return 1
             Case Is = "defence"
                 delayprint($"You used a {item} and now have a +{itemstat} defence bonus!", 30, 500)
                 iteminv.Remove(item)
-                defbonus = itemstat
+                pdefencebonus = itemstat
                 Return 1
             Case Is = "mana"
                 If pmana <> maxpmana Then
@@ -361,7 +361,7 @@ Module Program
         While go1 = True
             go2 = True
             While go2 = True
-                Dim choices As New List(Of String)({"Attack", "Magic", "Check Inventory", "Dictionary"})
+                Dim choices As New List(Of String)({"Attack", "Magic", "Check Inventory", "Dictionary", "save"})
                 delayprint($"What would you like to do? {Listprint(choices)} HP:{phealth}", 30, 75)
                 Dim choice As String = Console.ReadLine.ToLower()
                 If choice = "attack" Then
@@ -388,7 +388,7 @@ Module Program
                 ElseIf choice = "magic" Then
                     delayprint("What magic would you like to use?", 30, 300)
                     Try
-                        delayprint($"You currently have these spells: {Listprint(maginv)} and are on {pmana} mana!", 10, 75)
+                        delayprint($"You currently have these spells: {Listprint(maginv)} and are on {pmana} mana!", invprintspeed, 75)
                     Catch
                         delayprint("You don't have any magic!", 30, 300)
                     End Try
@@ -416,7 +416,6 @@ Module Program
                             If ehp <= 0 Then
                                 go1 = False
                                 delayprint($"You killed {pre} {enstats.name}", 30, 300)
-                                pmanabonus = 0
                                 pattackbonus = 0
                                 pdefencebonus = 0
                                 phealthbonus = 0
@@ -425,7 +424,7 @@ Module Program
                         End If
                     Next
                 ElseIf choice = "check inventory" Then
-                    delayprint($"You currently have: {Listprint(iteminv)}", 10, 75)
+                    delayprint($"You currently have: {Listprint(iteminv)}", invprintspeed, 75)
                     delayprint("What item would you like to use?", 30, 300)
                     Dim itemuse As String = Console.ReadLine()
                     For index0 = 0 To itemstats.GetUpperBound(0)
@@ -439,8 +438,9 @@ Module Program
                         End If
                     Next
                 ElseIf choice = "dictionary" Then
-                    delayprint($"You currently have the weapon entries for {Listprint(inv)} {Listprint(maginv)}", 10, 500)
-                    delayprint($"You also have enemy entries for {Listprint(enemyentry)}", 10, 500)
+                    delayprint($"You currently have the weapon entries for {Listprint(inv)} {Listprint(maginv)}", invprintspeed, 500)
+                    Console.WriteLine()
+                    delayprint($"You also have enemy entries for {Listprint(enemyentry)}", invprintspeed, 500)
                     delayprint("Which entry would you like to read?", 30, 500)
                     Dim entry As String = Console.ReadLine()
                     If inv.Contains(entry) Or enemyentry.Contains(entry) Or maginv.Contains(entry) Then
@@ -449,6 +449,8 @@ Module Program
                         delayprint("You do not have an entry for this item", 30, 500)
                     End If
                     Console.WriteLine("")
+                ElseIf choice = "save" Then
+                    Save()
                 End If
             End While
             If go1 <> False Then
@@ -457,7 +459,7 @@ Module Program
             While go2 = True
                 Dim r As Random = New Random()
                 If r.Next(1, 21) >= enstats.hit Then
-                    Dim edmg As Integer = r.Next(enstats.damagerange(0), enstats.damagerange(1) + 1) - defbonus
+                    Dim edmg As Integer = r.Next(enstats.damagerange(0), enstats.damagerange(1) + 1 - pdefencebonus)
                     phealth -= edmg
                     delayprint($"{pre} {enstats.name} hit you for {edmg}HP! You are now on {phealth}HP!", 30, 250)
                 Else
@@ -752,6 +754,62 @@ Module Program
         End While
         delayprint($"So you have chosen {Listprint(maginv)}", 30, 500)
     End Sub
+    Sub Save() 'enemyentry maginv iteminv inv  pmana maxpmana maxphealth phealth pname floor section
+        delayprint("What would you like to save the file as?", 30, 500)
+        Dim choice As String = Console.ReadLine().ToLower()
+        Try
+            Dim objectToSerialise As New DataToSerialise(
+           enemyentry, maginv, iteminv, inv, pmana, maxpmana,
+            maxphealth, phealth, pname, floor, section)
+            Dim serialiser As New Newtonsoft.Json.JsonSerializer()
+            Using sw As New StreamWriter($"saves/{choice}.json")
+                Using jsonwriter As New JsonTextWriter(sw)
+                    jsonwriter.Formatting = Formatting.Indented
+                    serialiser.Serialize(jsonwriter, objectToSerialise)
+                End Using
+            End Using
+            delayprint("Save has succesfully been created!", 30, 500)
+        Catch
+            delayprint("Error", 30, 500)
+        End Try
+    End Sub
+    Sub Load()
+        Dim obj As DataToSerialise
+        Dim dir As New DirectoryInfo($"{Directory.GetCurrentDirectory}\saves")
+        Dim filesArray As FileInfo() = dir.GetFiles("*.json")
+        Dim fi As FileInfo
+        For Each fi In filesArray
+            Console.WriteLine("Saves: {0}", fi.Name)
+        Next
+        delayprint("What save would you like to load?", 30, 500)
+        Dim choice As String = Console.ReadLine().ToLower()
+        If choice = "testfile" Then
+            invprintspeed = 0.1
+        End If
+        Try
+            Dim jsonText As String
+            Using sr As New StreamReader($"saves/{choice}.json")
+                jsonText = sr.ReadToEnd()
+            End Using
+            obj = JsonConvert.DeserializeObject(Of DataToSerialise)(jsonText)
+
+            Dim test As Integer = obj.phealth
+            delayprint("File Loaded successfully!", 30, 500)
+        Catch
+            delayprint("Error loading file.", 30, 500)
+        End Try
+        enemyentry = obj.enemyentry
+        maginv = obj.maginv
+        iteminv = obj.iteminv
+        inv = obj.inv
+        pmana = obj.pmana
+        maxpmana = obj.maxpmana
+        maxphealth = obj.maxphealth
+        phealth = obj.phealth
+        pname = obj.pname
+        floor = obj.floor
+        section = obj.section
+    End Sub
     Sub randbattle(floornum)
         Dim numtypeofenemy As Integer
         Select Case floornum '3 new types of enemy per floor except floor 1
@@ -804,145 +862,211 @@ Module Program
         End Select
     End Sub
     Sub Main()
-        Intro()
+        Dim playing As Boolean = True
+        delayprint("Would you like to load a file? [y][n]", 30, 500)
+        Dim choice As String = Console.ReadLine().ToLower
+        If choice = "y" Then
+            Try
+                Load()
+            Catch
+
+            End Try
+        End If
         Console.Clear()
-        Scenario(1, 0, "Floor 1")
-        Scenario(2, 0, "Big rat")
-        battle("bigrat")
-        Scenario(3, 15, "")
-        Console.Clear()
-        Scenario(2, 0, "Large Rat")
-        battle("LargeRat")
-        Scenario(3, 25, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Console.Clear()
-        Learnmag()
-        randbattle(floor)
-        Scenario(3, 25, "")
-        Scenario(8, 12, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Console.Clear()
-        Scenario(4, 0, " Biiig Rat")
-        battle("BiiigRat")
-        Scenario(6, 0, "")
-        Console.Clear()
-        Scenario(7, 0, "")
-        'floor 2 now :)
-        floor = 2
-        Scenario(1, 0, "Floor 2")
-        Scenario(2, 0, "Kobold Soldier")
-        battle("KoboldSoldier")
-        Scenario(3, 15, "")
-        randbattle(floor)
-        Console.Clear()
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        randbattle(floor)
-        Scenario(3, 15, "")
-        Scenario(8, 14, "")
-        Console.Clear()
-        Scenario(2, 0, "Kobold Guard")
-        battle("KoboldGuard")
-        Scenario(3, 20, "")
-        Scenario(8, 13, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Console.Clear()
-        Scenario(4, 0, " Kobold Chief")
-        battle("KoboldChief")
-        Scenario(6, 0, "")
-        Console.Clear()
-        Scenario(7, 0, "")
-        'floor 3 now
-        floor = 3
-        Scenario(1, 0, "Floor 3")
-        newmag()
-        Console.Clear()
-        Scenario(2, 0, "Small Enemy Spider")
-        battle("SmallEnemySpider")
-        Scenario(3, 15, "")
-        Scenario(8, 13, "")
-        Scenario(2, 0, "Giant Enemy Spider")
-        battle("GiantEnemySpider")
-        Scenario(3, 15, "")
-        Scenario(8, 16, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Console.Clear()
-        randbattle(floor)
-        Scenario(3, 24, "")
-        Scenario(8, 12, "")
-        Console.Clear()
-        Scenario(2, 0, "Muffets Pet")
-        battle("MuffetsPet")
-        Scenario(3, 25, "")
-        Scenario(8, 20, "")
-        Scenario(4, 0, " Muffet")
-        battle("Muffet")
-        Scenario(6, 0, "")
-        Console.Clear()
-        Scenario(7, 0, "")
-        'floor 4
-        floor = 4
-        Scenario(1, 0, "Floor 4")
-        Scenario(2, 0, "Lesser Imp")
-        battle("LesserImp")
-        Scenario(3, 40, "")
-        Console.Clear()
-        randbattle(floor)
-        Scenario(3, 20, "")
-        Scenario(8, 16, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Console.Clear()
-        Scenario(2, 0, "Lost Soul")
-        battle("LostSoul")
-        Scenario(3, 25, "")
-        Scenario(8, 17, "")
-        Console.Clear()
-        Scenario(2, 0, "Imp")
-        battle("Imp")
-        Console.Clear()
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Scenario(3, 15, "")
-        Scenario(8, 20, "")
-        Console.Clear()
-        Scenario(4, 0, " Lesser Demon")
-        battle("LesserDemon")
-        Scenario(6, 0, "")
-        Console.Clear()
-        Scenario(7, 0, "")
-        'final floor mostly custom stuff so new scenario stuff ig
-        floor = 5
-        Thread.Sleep(500)
-        Console.Clear()
-        Scenario(9, 0, "")
-        Scenario(10, 0, "Hati")
-        battle("Hati")
-        Scenario(3, 50, "")
-        Scenario(8, 15, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Thread.Sleep(500)
-        Console.Clear()
-        Scenario(10, 0, "Skoll")
-        battle("Skoll")
-        Scenario(3, 50, "")
-        Scenario(8, 15, "")
-        Scenario(5, 0, "")
-        Loot(floor, 0, 0)
-        Thread.Sleep(500)
-        Console.Clear()
-        Scenario(10, 0, "Fenrir")
-        battle("Fenrir")
-        Console.Clear()
-        Scenario(3, 100, "")
-        Scenario(8, 40, "")
-        Scenario(11, 0, "")
-        battle("anomaly")
-        Scenario(12, 0, "")
+        While playing = True
+            Select Case section
+                Case = 1
+                    Intro()
+                    Console.Clear()
+                    section += 1
+                Case = 2
+                    Scenario(1, 0, "Floor 1")
+                    Scenario(2, 0, "Big rat")
+                    battle("bigrat")
+                    Scenario(3, 15, "")
+                    Console.Clear()
+                    section += 1
+                Case = 3
+                    Scenario(2, 0, "Large Rat")
+                    battle("LargeRat")
+                    Scenario(3, 25, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 4
+                    Learnmag()
+                    section += 1
+                Case = 5
+                    randbattle(floor)
+                    Scenario(3, 25, "")
+                    Scenario(8, 12, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 6
+                    Scenario(4, 0, " Biiig Rat")
+                    battle("BiiigRat")
+                    Scenario(6, 0, "")
+                    Console.Clear()
+                    Scenario(7, 0, "")
+                    section += 1
+                    'floor 2 now :)
+                Case = 7
+                    floor = 2
+                    Scenario(1, 0, "Floor 2")
+                    Scenario(2, 0, "Kobold Soldier")
+                    battle("KoboldSoldier")
+                    Scenario(3, 15, "")
+                    randbattle(floor)
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 8
+                    randbattle(floor)
+                    Scenario(3, 15, "")
+                    Scenario(8, 14, "")
+                    Console.Clear()
+                    section += 1
+                Case = 9
+                    Scenario(2, 0, "Kobold Guard")
+                    battle("KoboldGuard")
+                    Scenario(3, 20, "")
+                    Scenario(8, 13, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 10
+                    Scenario(4, 0, " Kobold Chief")
+                    battle("KoboldChief")
+                    Scenario(6, 0, "")
+                    Console.Clear()
+                    Scenario(7, 0, "")
+                    section += 1
+                    'floor 3 now
+                Case = 11
+                    floor = 3
+                    Scenario(1, 0, "Floor 3")
+                    newmag()
+                    Console.Clear()
+                    section += 1
+                Case = 12
+                    Scenario(2, 0, "Small Enemy Spider")
+                    battle("SmallEnemySpider")
+                    Scenario(3, 15, "")
+                    Scenario(8, 13, "")
+                    Console.Clear()
+                    section += 1
+                Case = 13
+                    Scenario(2, 0, "Giant Enemy Spider")
+                    battle("GiantEnemySpider")
+                    Scenario(3, 15, "")
+                    Scenario(8, 16, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 14
+                    randbattle(floor)
+                    Scenario(3, 24, "")
+                    Scenario(8, 12, "")
+                    Console.Clear()
+                    section += 1
+                Case = 15
+                    Scenario(2, 0, "Muffets Pet")
+                    battle("MuffetsPet")
+                    Scenario(3, 25, "")
+                    Scenario(8, 20, "")
+                    Console.Clear()
+                    section += 1
+                Case = 16
+                    Scenario(4, 0, " Muffet")
+                    battle("Muffet")
+                    Scenario(6, 0, "")
+                    Console.Clear()
+                    section += 1
+                Case = 17
+                    Scenario(7, 0, "")
+                    'floor 4
+                    floor = 4
+                    Scenario(1, 0, "Floor 4")
+                    Scenario(2, 0, "Lesser Imp")
+                    battle("LesserImp")
+                    Scenario(3, 40, "")
+                    Console.Clear()
+                    section += 1
+                Case = 18
+                    randbattle(floor)
+                    Scenario(3, 20, "")
+                    Scenario(8, 16, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Console.Clear()
+                    section += 1
+                Case = 19
+                    Scenario(2, 0, "Lost Soul")
+                    battle("LostSoul")
+                    Scenario(3, 25, "")
+                    Scenario(8, 17, "")
+                    Console.Clear()
+                    section += 1
+                Case = 20
+                    Scenario(2, 0, "Imp")
+                    battle("Imp")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Scenario(3, 15, "")
+                    Scenario(8, 20, "")
+                    Console.Clear()
+                    section += 1
+                Case = 21
+                    Scenario(4, 0, " Lesser Demon")
+                    battle("LesserDemon")
+                    Scenario(6, 0, "")
+                    Console.Clear()
+                    section += 1
+                Case = 22
+                    Scenario(7, 0, "")
+                    'final floor mostly custom stuff so new scenario stuff ig
+                    floor = 5
+                    Thread.Sleep(500)
+                    Console.Clear()
+                    Scenario(9, 0, "")
+                    Scenario(10, 0, "Hati")
+                    battle("Hati")
+                    Scenario(3, 50, "")
+                    Scenario(8, 15, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Thread.Sleep(500)
+                    Console.Clear()
+                    section += 1
+                Case = 23
+                    Scenario(10, 0, "Skoll")
+                    battle("Skoll")
+                    Scenario(3, 50, "")
+                    Scenario(8, 15, "")
+                    Scenario(5, 0, "")
+                    Loot(floor, 0, 0)
+                    Thread.Sleep(500)
+                    Console.Clear()
+                    section += 1
+                Case = 24
+                    Scenario(10, 0, "Fenrir")
+                    battle("Fenrir")
+                    Scenario(3, 100, "")
+                    Scenario(8, 40, "")
+                    Console.Clear()
+                    section += 1
+                Case = 25
+                    Scenario(11, 0, "")
+                    battle("anomaly")
+                    Scenario(12, 0, "")
+                    section += 1
+            End Select
+        End While
     End Sub
 End Module
