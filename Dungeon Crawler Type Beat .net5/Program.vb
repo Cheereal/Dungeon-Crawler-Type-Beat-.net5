@@ -774,9 +774,10 @@ Module Program
         Dim filesArray As FileInfo() = dir.GetFiles("*.json")
         Dim fi As FileInfo
         For Each fi In filesArray
-            Console.WriteLine("Saves: {0}", fi.Name)
+            Console.WriteLine("Saves:")
+            Console.WriteLine("{0}", fi.Name)
         Next
-        delayprint("What save would you like to load?", 30, 500)
+        Delayprint("What save would you like to load?", 30, 500)
         Dim choice As String = Console.ReadLine().ToLower()
         Try
             Dim jsonText As String
@@ -811,6 +812,8 @@ Module Program
                 If sect > 0 And sect < 26 And flr > 0 And flr < 5 Then
                     section = sect
                     floor = flr
+                ElseIf sect < 0 Or sect > 26 Or flr < 0 Or flr > 5 Then
+                    Delayprint("Error", 30, 500)
                 End If
             Catch
                 Delayprint("Error", 30, 500)
