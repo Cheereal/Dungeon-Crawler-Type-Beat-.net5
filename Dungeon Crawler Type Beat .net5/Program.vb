@@ -1,8 +1,5 @@
-﻿Imports System
-Imports System.Threading
-Imports System.Text.Json
+﻿Imports System.Threading
 Imports System.IO
-Imports System.Text.Json.Serialization
 Imports Newtonsoft.Json
 
 'To Do:
@@ -29,13 +26,13 @@ Module Program
     Dim iteminv As New List(Of String)({"small health potion", "small health potion"})
     Dim maginv As New List(Of String)({})
     Dim ehp As Integer = 0
-    Dim healmag As New List(Of String)({"basic heal", "advanced heal", "master heal"})
-    Dim weaponstats = {{"copper short sword", 7, 18, 6}, {"copper long sword", 5, 20, 7}, {"kunai", 6, 18, 4}, {"short bow", 3, 19, 5}, {"crossbow", 7, 25, 9}, {"mace", 5, 15, 4}, {"spear", 5, 16, 6}, {"boomerang", 10, 25, 9}, {"knife", 6, 18, 7}, {"claymore", 5, 30, 8}, {"dagger", 4, 12, 4}, {"throwing knife", 8, 22, 8}, {"iron long sword", 8, 24, 7}, {"iron short sword", 9, 20, 6}, {"javelin", 10, 25, 8}, {"long bow", 6, 21, 6}, {"stick", 4, 5, 1}, {"shield", 6, 18, 3}, {"mythril long sword", 17, 30, 7}, {"mythril short sword", 13, 26, 6}, {"scythe", 8, 24, 8}, {"sickle", 10, 20, 6}, {"steel long sword", 14, 27, 7}, {"steel short sword", 13, 24, 6}, {"magic katana", 16, 28, 5}, {"magic kunai", 14, 26, 5}, {"magic long bow", 10, 25, 5}, {"magic long sword", 16, 28, 6}, {"magic short bow", 6, 22, 4}, {"magic short sword", 11, 24, 5}, {"molotov", 20, 35, 9}, {"enchanted shield", 8, 28, 5}, {"biiiiig sword", 25, 37, 6}, {"blood butcherer", 22, 39, 7}, {"chain sword", 30, 40, 9}, {"deagle", 30, 37, 8}, {"reflective shield", 13, 30, 4}, {"l115a3", 42, 55, 5}, {"gun shaped stick", 45, 57, 6}, {"holy hand grenade", 45, 60, 8}, {"slightly bigger stick", 30, 35, 2}, {"midas sword", 30, 70, 5}} 'weapon name, min damage, max damage, hit/20 (if above hit is a hit)
-    Dim magicstats = {{"basic heal", 5, 17, 0, 6}, {"conjure rock", 14, 26, 7, 7}, {"electric shock", 10, 20, 8, 8}, {"fireball", 13, 26, 8, 6}, {"generate wind", 5, 10, 6, 5}, {"water ball", 12, 24, 7, 6}, {"advanced heal", 15, 30, 0, 8}, {"conjure big rock", 20, 40, 8, 12}, {"electric ball", 20, 34, 6, 10}, {"firewall", 23, 32, 7, 9}, {"twister", 18, 25, 5, 8}, {"waterbolt", 16, 36, 8, 9}, {"master heal", 25, 45, 0, 14}, {"earthquake", 35, 55, 8, 17}, {"electric wave", 30, 48, 7, 16}, {"inferno", 40, 64, 10, 19}, {"tornado", 25, 54, 7, 16}, {"tsunami", 42, 53, 6, 19}} 'magic name, min damage/heal, max damage/heal, hit/20 (if above hit is a hit), mana used
-    Dim itemstats = {{"small health potion", 25, "heal"}, {"small damage potion", 3, "damage"}, {"small defence potion", 5, "defence"}, {"small mana potion", 5, "mana"}, {"medium health potion", 50, "heal"}, {"medium damage potion", 8, "damage"}, {"medium defence potion", 13, "defence"}, {"medium mana potion", 15, "mana"}, {"large health potion", 999, "heal"}, {"large damage potion", 15, "damage"}, {"large defence potion", 18, "defence"}, {"large mana potion", 999, "mana"}} 'item name, hp/damageboost/damageblock ,item type
+    ReadOnly healmag As New List(Of String)({"basic heal", "advanced heal", "master heal"})
+    ReadOnly weaponstats = {{"copper short sword", 7, 18, 6}, {"copper long sword", 5, 20, 7}, {"kunai", 6, 18, 4}, {"short bow", 3, 19, 5}, {"crossbow", 7, 25, 9}, {"mace", 5, 15, 4}, {"spear", 5, 16, 6}, {"boomerang", 10, 25, 9}, {"knife", 6, 18, 7}, {"claymore", 5, 30, 8}, {"dagger", 4, 12, 4}, {"throwing knife", 8, 22, 8}, {"iron long sword", 8, 24, 7}, {"iron short sword", 9, 20, 6}, {"javelin", 10, 25, 8}, {"long bow", 6, 21, 6}, {"stick", 4, 5, 1}, {"shield", 6, 18, 3}, {"mythril long sword", 17, 30, 7}, {"mythril short sword", 13, 26, 6}, {"scythe", 8, 24, 8}, {"sickle", 10, 20, 6}, {"steel long sword", 14, 27, 7}, {"steel short sword", 13, 24, 6}, {"magic katana", 16, 28, 5}, {"magic kunai", 14, 26, 5}, {"magic long bow", 10, 25, 5}, {"magic long sword", 16, 28, 6}, {"magic short bow", 6, 22, 4}, {"magic short sword", 11, 24, 5}, {"molotov", 20, 35, 9}, {"enchanted shield", 8, 28, 5}, {"biiiiig sword", 25, 37, 6}, {"blood butcherer", 22, 39, 7}, {"chain sword", 30, 40, 9}, {"deagle", 30, 37, 8}, {"reflective shield", 13, 30, 4}, {"l115a3", 42, 55, 5}, {"gun shaped stick", 45, 57, 6}, {"holy hand grenade", 45, 60, 8}, {"slightly bigger stick", 30, 35, 2}, {"midas sword", 30, 70, 5}} 'weapon name, min damage, max damage, hit/20 (if above hit is a hit)
+    ReadOnly magicstats = {{"basic heal", 5, 17, 0, 6}, {"conjure rock", 14, 26, 7, 7}, {"electric shock", 10, 20, 8, 8}, {"fireball", 13, 26, 8, 6}, {"generate wind", 5, 10, 6, 5}, {"water ball", 12, 24, 7, 6}, {"advanced heal", 15, 30, 0, 8}, {"conjure big rock", 20, 40, 8, 12}, {"electric ball", 20, 34, 6, 10}, {"firewall", 23, 32, 7, 9}, {"twister", 18, 25, 5, 8}, {"waterbolt", 16, 36, 8, 9}, {"master heal", 25, 45, 0, 14}, {"earthquake", 35, 55, 8, 17}, {"electric wave", 30, 48, 7, 16}, {"inferno", 40, 64, 10, 19}, {"tornado", 25, 54, 7, 16}, {"tsunami", 42, 53, 6, 19}} 'magic name, min damage/heal, max damage/heal, hit/20 (if above hit is a hit), mana used
+    ReadOnly itemstats = {{"small health potion", 25, "heal"}, {"small damage potion", 3, "damage"}, {"small defence potion", 5, "defence"}, {"small mana potion", 5, "mana"}, {"medium health potion", 50, "heal"}, {"medium damage potion", 8, "damage"}, {"medium defence potion", 13, "defence"}, {"medium mana potion", 15, "mana"}, {"large health potion", 999, "heal"}, {"large damage potion", 15, "damage"}, {"large defence potion", 18, "defence"}, {"large mana potion", 999, "mana"}} 'item name, hp/damageboost/damageblock ,item type
     Dim enemyentry As New List(Of String)({})
     Dim pre As String = "The"
-    Sub delayprint(x As String, y As Integer, sleep As Integer)
+    Sub Delayprint(x As String, y As Integer, sleep As Integer)
         For Each letter As String In x
             Console.Write(letter)
             Thread.Sleep(y)
@@ -43,7 +40,7 @@ Module Program
         Console.WriteLine("")
         Thread.Sleep(sleep)
     End Sub
-    Sub description(choice As String)
+    Sub Description(choice As String)
         Dim jsondesc As String
         Using streamreader As New StreamReader("desc.json")
             jsondesc = streamreader.ReadToEnd()
@@ -56,7 +53,7 @@ Module Program
         End Try
     End Sub
     Sub Loot(floor As Integer, overrideloot As Integer, getweapoverride As Integer)
-        Dim r As Random = New Random()
+        Dim r As New Random()
         delayprint("You found some items inside!", 30, 500)
         Dim gotitem As Integer = r.Next(1, 5)
         Dim rarity As String
@@ -264,7 +261,7 @@ Module Program
             End If
             If gotweap = 1 Then
                 delayprint($"You found a {weap}", 30, 500)
-                delayprint($"You have these weapons now: {Listprint(inv)}", 10, 75)
+                Delayprint($"You have these weapons now: {Listprint(inv)}", invprintspeed, 75)
             End If
         End If
     End Sub
@@ -281,29 +278,27 @@ Module Program
         Return items
     End Function
 
-    Sub Fight(ename As String, weaponmax As Integer, weaponmin As Integer, weaponhit As Integer, enemyhp As Integer, enemymin As Integer, enemymax As Integer)
-        Dim r As Random = New Random()
+    Sub Fight(ename As String, weaponmax As Integer, weaponmin As Integer, weaponhit As Integer)
+        Dim r As New Random()
         If r.Next(1, 20) >= weaponhit Then
             Dim dmg As Integer = r.Next(weaponmin, weaponmax + 1) + pattackbonus
             ehp -= dmg
-            delayprint($"You hit {pre} {ename} for {dmg}HP!", 30, 250)
+            Delayprint($"You hit {pre} {ename} for {dmg}HP!", 30, 250)
         Else
-            delayprint("You missed your attack!", 30, 250)
+            Delayprint("You missed your attack!", 30, 250)
         End If
         Console.WriteLine()
     End Sub
-
-    Sub Heal(weaponmax As Integer, weaponmin As Integer, php As Integer)
-        Dim r As Random = New Random()
+    Sub Heal(weaponmax As Integer, weaponmin As Integer)
+        Dim r As New Random()
         Dim pheal As Integer = r.Next(weaponmin, weaponmax + 1)
         phealth += pheal
         If phealth > maxphealth Then
             phealth = maxphealth
         End If
-        delayprint($"You used a magic spell and healed for {pheal}HP! You are now on {phealth}HP! And are now on {pmana} mana!", 30, 500)
+        Delayprint($"You used a magic spell and healed for {pheal}HP! You are now on {phealth}HP! And are now on {pmana} mana!", 30, 500)
     End Sub
-
-    Function useitem(item As String, itemstat As Integer, itemtype As String)
+    Function Useitem(item As String, itemstat As Integer, itemtype As String)
         Select Case itemtype
             Case Is = "heal"
                 If phealth <> maxphealth Then
@@ -348,7 +343,7 @@ Module Program
         End Select
     End Function
 
-    Sub battle(ename As String, Optional remthe As Boolean = False)
+    Sub Battle(ename As String, Optional remthe As Boolean = False)
         If remthe = True Then
             pre = ""
         End If
@@ -362,39 +357,39 @@ Module Program
             go2 = True
             While go2 = True
                 Dim choices As New List(Of String)({"Attack", "Magic", "Check Inventory", "Dictionary", "save"})
-                delayprint($"What would you like to do? {Listprint(choices)} HP:{phealth}", 30, 75)
+                Delayprint($"What would you like to do? {Listprint(choices)} HP:{phealth}", 30, 75)
                 Dim choice As String = Console.ReadLine.ToLower()
                 If choice = "attack" Then
-                    delayprint("What weapon would you like to use?", 30, 300)
-                    delayprint($"You currently have these weapons: {Listprint(inv)}", 10, 75)
+                    Delayprint("What weapon would you like to use?", 30, 300)
+                    Delayprint($"You currently have these weapons: {Listprint(inv)}", invprintspeed, 75)
                     Dim weapon As String = Console.ReadLine().ToLower
                     If Not inv.Contains(weapon) Then
-                        delayprint("You do not have this weapon!", 30, 500)
+                        Delayprint("You do not have this weapon!", 30, 500)
                     End If
                     For index0 = 0 To weaponstats.GetUpperBound(0)
                         If weaponstats(index0, 0) = weapon And inv.Contains(weapon) Then
                             Dim weaponmin = weaponstats(index0, 1)
                             Dim weaponmax = weaponstats(index0, 2)
                             Dim weaponhit = weaponstats(index0, 3)
-                            Fight(enstats.name, weaponmax, weaponmin, weaponhit, ehp, enstats.damagerange(0), enstats.damagerange(1))
+                            Fight(enstats.name, weaponmax, weaponmin, weaponhit)
                             go2 = False
                             If ehp <= 0 Then
                                 go1 = False
-                                delayprint($"You killed {pre} {enstats.name}", 30, 500)
+                                Delayprint($"You killed {pre} {enstats.name}", 30, 500)
                                 go2 = False
                             End If
                         End If
                     Next
                 ElseIf choice = "magic" Then
-                    delayprint("What magic would you like to use?", 30, 300)
+                    Delayprint("What magic would you like to use?", 30, 300)
                     Try
-                        delayprint($"You currently have these spells: {Listprint(maginv)} and are on {pmana} mana!", invprintspeed, 75)
+                        Delayprint($"You currently have these spells: {Listprint(maginv)} and are on {pmana} mana!", invprintspeed, 75)
                     Catch
-                        delayprint("You don't have any magic!", 30, 300)
+                        Delayprint("You don't have any magic!", 30, 300)
                     End Try
                     Dim weapon As String = Console.ReadLine()
                     If Not maginv.Contains(weapon) Then
-                        delayprint("You do not have this magic!", 30, 300)
+                        Delayprint("You do not have this magic!", 30, 300)
                     End If
                     For index0 = 0 To magicstats.GetUpperBound(0)
                         If magicstats(index0, 0) = weapon Then
@@ -404,18 +399,18 @@ Module Program
                             If pmana - magicstats(index0, 4) >= 0 And maginv.Contains(weapon) Then
                                 If healmag.Contains(weapon) Then
                                     pmana -= magicstats(index0, 4)
-                                    Heal(weaponmax, weaponmin, phealth)
+                                    Heal(weaponmax, weaponmin)
                                     go2 = False
                                 Else
                                     pmana -= magicstats(index0, 4)
-                                    Fight(enstats.name, weaponmax, weaponmin, weaponhit, ehp, enstats.damagerange(0), enstats.damagerange(1))
-                                    delayprint($"You are now on {pmana} mana!", 30, 300)
+                                    Fight(enstats.name, weaponmax, weaponmin, weaponhit)
+                                    Delayprint($"You are now on {pmana} mana!", 30, 300)
                                     go2 = False
                                 End If
                             End If
                             If ehp <= 0 Then
                                 go1 = False
-                                delayprint($"You killed {pre} {enstats.name}", 30, 300)
+                                Delayprint($"You killed {pre} {enstats.name}", 30, 300)
                                 pattackbonus = 0
                                 pdefencebonus = 0
                                 phealthbonus = 0
@@ -424,29 +419,29 @@ Module Program
                         End If
                     Next
                 ElseIf choice = "check inventory" Then
-                    delayprint($"You currently have: {Listprint(iteminv)}", invprintspeed, 75)
-                    delayprint("What item would you like to use?", 30, 300)
+                    Delayprint($"You currently have: {Listprint(iteminv)}", invprintspeed, 75)
+                    Delayprint("What item would you like to use?", 30, 300)
                     Dim itemuse As String = Console.ReadLine()
                     For index0 = 0 To itemstats.GetUpperBound(0)
                         If itemstats(index0, 0) = itemuse And iteminv.Contains(itemuse) Then
                             Dim itemstat = itemstats(index0, 1)
                             Dim itemtype = itemstats(index0, 2)
-                            Dim endt As Boolean = useitem(itemuse, itemstat, itemtype)
+                            Dim endt As Boolean = Useitem(itemuse, itemstat, itemtype)
                             If endt = 1 Then
                                 go2 = False
                             End If
                         End If
                     Next
                 ElseIf choice = "dictionary" Then
-                    delayprint($"You currently have the weapon entries for {Listprint(inv)} {Listprint(maginv)}", invprintspeed, 500)
+                    Delayprint($"You currently have the weapon entries for {Listprint(inv)} {Listprint(maginv)}", invprintspeed, 500)
                     Console.WriteLine()
-                    delayprint($"You also have enemy entries for {Listprint(enemyentry)}", invprintspeed, 500)
-                    delayprint("Which entry would you like to read?", 30, 500)
+                    Delayprint($"You also have enemy entries for {Listprint(enemyentry)}", invprintspeed, 500)
+                    Delayprint("Which entry would you like to read?", 30, 500)
                     Dim entry As String = Console.ReadLine()
                     If inv.Contains(entry) Or enemyentry.Contains(entry) Or maginv.Contains(entry) Then
-                        description(entry)
+                        Description(entry)
                     Else
-                        delayprint("You do not have an entry for this item", 30, 500)
+                        Delayprint("You do not have an entry for this item", 30, 500)
                     End If
                     Console.WriteLine("")
                 ElseIf choice = "save" Then
@@ -457,20 +452,20 @@ Module Program
                 go2 = True
             End If
             While go2 = True
-                Dim r As Random = New Random()
+                Dim r As New Random()
                 If r.Next(1, 21) >= enstats.hit Then
                     Dim edmg As Integer = r.Next(enstats.damagerange(0), enstats.damagerange(1) + 1 - pdefencebonus)
                     phealth -= edmg
-                    delayprint($"{pre} {enstats.name} hit you for {edmg}HP! You are now on {phealth}HP!", 30, 250)
+                    Delayprint($"{pre} {enstats.name} hit you for {edmg}HP! You are now on {phealth}HP!", 30, 250)
                 Else
-                    delayprint($"{pre} {enstats.name} tried to attack you but missed!", 30, 250)
+                    Delayprint($"{pre} {enstats.name} tried to attack you but missed!", 30, 250)
                 End If
                 If phealth <= 0 Then
                     go1 = False
                     Playing = False
-                    delayprint($"You died to {pre} {enstats.name}!", 30, 500)
+                    Delayprint($"You died to {pre} {enstats.name}!", 30, 500)
                     Console.Clear()
-                    delayprint("Game over lol", 30, 500)
+                    Delayprint("Game over lol", 30, 500)
                     End
                 End If
                 go2 = False
@@ -631,21 +626,21 @@ Module Program
         delayprint("You walk over to a nearby table and pick up 2 small health potions!", 30, 500)
         delayprint("'You'd better hope that was the right choice...'", 30, 1500)
     End Sub
-    Sub newmag()
-        delayprint("Voice: 'You have done well to make it this far...", 30, 500)
-        delayprint("Voice: 'I can bestow upon you some knowledge and a new spell'", 30, 500)
-        delayprint("Voice: 'I will also increase your max mana and health...", 30, 500)
+    Sub Newmag()
+        Delayprint("Voice: 'You have done well to make it this far...", 30, 500)
+        Delayprint("Voice: 'I can bestow upon you some knowledge and a new spell'", 30, 500)
+        Delayprint("Voice: 'I will also increase your max mana and health...", 30, 500)
         maxphealth += 15
         maxpmana += 10
         phealth = maxphealth
         pmana = maxpmana
-        delayprint($"Your max hp is now: {maxphealth} and your max mana is now: {maxpmana}", 30, 500)
-        delayprint("Voice: 'It seems as though there is some other power still controlling the dungeon, although I am still here I can not stop these monsters until this being is defeated'", 30, 500)
-        delayprint("Voice: 'I believe whatever has taken over this dungeon will be staying on the fifth floor of the dungeon'", 30, 500)
-        delayprint("Voice: 'That is all I have found out for now'", 30, 500)
-        delayprint("Voice: 'I can now give you a new, upgraded spell'", 30, 500)
-        delayprint("Advanced Heal, Conjure Big Rock, Electric Ball, Firewall, Twister, Water Bolt", 30, 500)
-        delayprint("Voice: 'So, what would you like?'", 30, 500)
+        Delayprint($"Your max hp is now: {maxphealth} and your max mana is now: {maxpmana}", 30, 500)
+        Delayprint("Voice: 'It seems as though there is some other power still controlling the dungeon, although I am still here I can not stop these monsters until this being is defeated'", 30, 500)
+        Delayprint("Voice: 'I believe whatever has taken over this dungeon will be staying on the fifth floor of the dungeon'", 30, 500)
+        Delayprint("Voice: 'That is all I have found out for now'", 30, 500)
+        Delayprint("Voice: 'I can now give you a new, upgraded spell'", 30, 500)
+        Delayprint("Advanced Heal, Conjure Big Rock, Electric Ball, Firewall, Twister, Water Bolt", 30, 500)
+        Delayprint("Voice: 'So, what would you like?'", 30, 500)
         go1 = True
         While go1 = True
             Dim choice = Console.ReadLine().ToLower
@@ -670,7 +665,7 @@ Module Program
                     go1 = False
             End Select
         End While
-        delayprint($"You now have: {Listprint(maginv)}", 30, 500)
+        Delayprint($"You now have: {Listprint(maginv)}", 30, 500)
     End Sub
     Function Grabstats(ename As String)
         Dim jsonFile As String
@@ -761,7 +756,7 @@ Module Program
             Dim objectToSerialise As New DataToSerialise(
            enemyentry, maginv, iteminv, inv, pmana, maxpmana,
             maxphealth, phealth, pname, floor, section)
-            Dim serialiser As New Newtonsoft.Json.JsonSerializer()
+            Dim serialiser As New JsonSerializer()
             Using sw As New StreamWriter($"saves/{choice}.json")
                 Using jsonwriter As New JsonTextWriter(sw)
                     jsonwriter.Formatting = Formatting.Indented
@@ -783,9 +778,6 @@ Module Program
         Next
         delayprint("What save would you like to load?", 30, 500)
         Dim choice As String = Console.ReadLine().ToLower()
-        If choice = "testfile" Then
-            invprintspeed = 0.1
-        End If
         Try
             Dim jsonText As String
             Using sr As New StreamReader($"saves/{choice}.json")
@@ -809,8 +801,23 @@ Module Program
         pname = obj.pname
         floor = obj.floor
         section = obj.section
+        If choice = "testfile" Then
+            invprintspeed = 0.1
+            Delayprint("What section would you like to start on? (1-intro, 2-floor 1, 7-floor 2, 11-floor 3, 17-floor 4, 22,floor 5)", 30, 500)
+            Try
+                Dim sect As Integer = Console.ReadLine()
+                Delayprint("What floor would you like loot to be? (between 1 and 4 inclusive)", 30, 500)
+                Dim flr As Integer = Console.ReadLine
+                If sect > 0 And sect < 26 And flr > 0 And flr < 5 Then
+                    section = sect
+                    floor = flr
+                End If
+            Catch
+                Delayprint("Error", 30, 500)
+            End Try
+        End If
     End Sub
-    Sub randbattle(floornum)
+    Sub Randbattle(floornum)
         Dim numtypeofenemy As Integer
         Select Case floornum '3 new types of enemy per floor except floor 1
             Case Is = 1
@@ -824,41 +831,41 @@ Module Program
             Case Is = 5
                 numtypeofenemy = 11
         End Select
-        Dim r As Random = New Random()
+        Dim r As New Random()
         Select Case r.Next(1, numtypeofenemy + 1)
             Case Is = 1
                 Scenario(2, 0, "Big Rat")
-                battle("BigRat")
+                Battle("BigRat")
             Case Is = 2
                 Scenario(2, 0, "Large Rat")
-                battle("LargeRat")
+                Battle("LargeRat")
             Case Is = 3
                 Scenario(2, 0, "Kobold Soldier")
-                battle("Koboldsoldier")
+                Battle("Koboldsoldier")
             Case Is = 4
                 Scenario(2, 0, "Kobold Archer")
-                battle("KoboldArcher")
+                Battle("KoboldArcher")
             Case Is = 5
                 Scenario(2, 0, "Kobold Guard")
-                battle("KoboldGuard")
+                Battle("KoboldGuard")
             Case Is = 6
                 Scenario(2, 0, "Small Enemy Spider")
-                battle("SmallEnemySpider")
+                Battle("SmallEnemySpider")
             Case Is = 7
                 Scenario(2, 0, "Giant Enemy Spider")
-                battle("GiantEnemySpider")
+                Battle("GiantEnemySpider")
             Case Is = 8
                 Scenario(2, 0, "Muffets Pet")
-                battle("MuffetsPet")
+                Battle("MuffetsPet")
             Case Is = 9
                 Scenario(2, 0, "Lesser Imp")
-                battle("LesserImp")
+                Battle("LesserImp")
             Case Is = 10
                 Scenario(2, 0, "Lost Soul")
-                battle("LostSoul")
+                Battle("LostSoul")
             Case Is = 11
                 Scenario(2, 0, "Imp")
-                battle("Imp")
+                Battle("Imp")
         End Select
     End Sub
     Sub Main()
