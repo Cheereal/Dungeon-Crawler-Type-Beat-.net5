@@ -81,7 +81,7 @@ Module Program
                 iteminv.Add(rarity + " mana potion")
                 delayprint($"Voice: 'That's a {rarity} mana potion'", 30, 500)
         End Select
-        delayprint($"You now have {Listprint(iteminv)} In your inventory!", 30, 75)
+        Delayprint($"You now have {Listprint(iteminv)} In your inventory!", invprintspeed, 75)
         Dim gotweap As Integer = r.Next(1, 3)
         If getweapoverride = 1 Then
             gotweap = 1
@@ -598,18 +598,18 @@ Module Program
     End Sub
 
     Sub Intro()
-        delayprint("You find yourself locked in an unfamiliar dungeon. You hear a voice telling you:", 40, 500)
-        delayprint("Voice: 'The only way out is to escape through the tenth floor. Good luck'", 30, 1000)
+        Delayprint("You find yourself locked in an unfamiliar dungeon. You hear a voice telling you:", 40, 500)
+        Delayprint("Voice: 'The only way out is to escape through the fifth floor. Good luck'", 30, 1000)
         Console.WriteLine("")
-        delayprint("An ancient slate appears before you. ", 30, 500)
-        delayprint("What is your name? ", 30, 0)
+        Delayprint("An ancient slate appears before you. ", 30, 500)
+        Delayprint("What is your name? ", 30, 0)
         pname = Console.ReadLine().ToString
-        delayprint($"The slate engraves '{pname}' into its stone ", 30, 1000)
+        Delayprint($"The slate engraves '{pname}' into its stone ", 30, 1000)
         Console.WriteLine("")
-        delayprint("Choose a starting weapon.", 30, 500)
+        Delayprint("Choose a starting weapon.", 30, 500)
         go1 = True
         While go1 = True
-            delayprint("Your choices are: Copper Short Sword, Copper Long Sword, Short Bow. Choose wisely.", 30, 500)
+            Delayprint("Your choices are: Copper Short Sword, Copper Long Sword, Short Bow. Choose wisely.", 30, 500)
             Dim choice As String = Console.ReadLine().ToLower
             If choice = "copper short sword" Then
                 inv.Add("copper short sword")
@@ -622,9 +622,9 @@ Module Program
                 go1 = False
             End If
         End While
-        delayprint($"You picked: {Listprint(inv)}", 30, 500)
-        delayprint("You walk over to a nearby table and pick up 2 small health potions!", 30, 500)
-        delayprint("'You'd better hope that was the right choice...'", 30, 1500)
+        Delayprint($"You picked: {Listprint(inv)}", 30, 500)
+        Delayprint("You walk over to a nearby table and pick up 2 small health potions!", 30, 500)
+        Delayprint("'You'd better hope that was the right choice...'", 30, 1500)
     End Sub
     Sub Newmag()
         Delayprint("Voice: 'You have done well to make it this far...", 30, 500)
@@ -769,7 +769,7 @@ Module Program
         End Try
     End Sub
     Sub Load()
-        Dim obj As DataToSerialise
+        Dim obj As DataToSerialise = JsonConvert.DeserializeObject(Of DataToSerialise)("") 'the = part is unnecessary it just pissed me off that there was a green squiggly
         Dim dir As New DirectoryInfo($"{Directory.GetCurrentDirectory}\saves")
         Dim filesArray As FileInfo() = dir.GetFiles("*.json")
         Dim fi As FileInfo
